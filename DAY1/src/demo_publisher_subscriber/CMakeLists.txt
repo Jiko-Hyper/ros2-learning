@@ -11,10 +11,15 @@ find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(std_msgs REQUIRED)
 
+# publisher
 add_executable(demo_publisher src/my_publisher.cpp)
 target_link_libraries(demo_publisher rclcpp::rclcpp std_msgs::std_msgs)
 
-install(TARGETS demo_publisher
+# subscriber
+add_executable(demo_subscriber src/my_subscriber.cpp)
+target_link_libraries(demo_subscriber rclcpp::rclcpp std_msgs::std_msgs)
+
+install(TARGETS demo_publisher demo_subscriber
   DESTINATION lib/${PROJECT_NAME})
   
 if(BUILD_TESTING)
