@@ -1,0 +1,8 @@
+# VS Code generated files
+.vscode/
+browse.vc.db
+
+# ROS 2 generated directories
+build/
+install/
+log/
