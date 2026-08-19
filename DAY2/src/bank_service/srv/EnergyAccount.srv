@@ -1,0 +1,10 @@
+#request
+string operation
+float32 amount
+
+---
+
+#response
+bool success
+float32 balance
+string message
