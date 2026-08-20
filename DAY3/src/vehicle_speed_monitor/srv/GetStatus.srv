@@ -1,0 +1,8 @@
+#request
+
+---
+
+#response
+float32 current_speed
+float32 peak_speed
+bool is_over_limit
