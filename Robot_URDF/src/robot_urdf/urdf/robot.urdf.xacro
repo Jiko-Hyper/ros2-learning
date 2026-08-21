@@ -1,0 +1,129 @@
+<?xml version="1.0"?>
+<robot name="robot" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+    <!--参数-->
+    <xacro:property name="base_length" value="0.4"/>
+    <xacro:property name="base_width" value="0.3"/>
+    <xacro:property name="base_height" value="0.1"/>
+    <xacro:property name="base_mass" value="2.0"/>
+    <xacro:property name="lidar_radius" value="0.05"/>
+    <xacro:property name="lidar_width" value="0.02"/>
+    <xacro:property name="lidar_mass" value="0.01"/>
+    <xacro:property name="leftwheel_radius" value="0.05"/>
+    <xacro:property name="leftwheel_width" value="0.02"/>
+    <xacro:property name="rightwheel_radius" value="0.05"/>
+    <xacro:property name="rightwheel_width" value="0.02"/>
+    <xacro:property name="wheel_mass" value="0.02"/>
+
+    <xacro:macro name="wheel" params="name y z radius width mass">
+        <link name="${name}_link">
+            <visual>
+                <origin xyz="0 0 0" rpy="1.5708 0 0"/>
+                <geometry>
+                    <cylinder radius="${radius}" length="${width}"/>
+                </geometry>
+            </visual>
+
+            <collision>
+
+                <origin xyz="0 0 0" rpy="1.5708 0 0"/>
+
+                <geometry>
+                    <cylinder radius="${radius}" length="${width}"/>
+                </geometry>
+
+            </collision>
+
+            <inertial>
+                <origin xyz="0 0 0" rpy="0 0 0"/>
+                <mass value="${mass}"/>
+                <inertia ixx="${mass * (3*radius*radius + width*width) / 12.0}" 
+                        ixy="0" 
+                        ixz="0" 
+                        iyy="${mass * radius*radius / 2.0}" 
+                        iyz="0" 
+                        izz="${mass * (3*radius*radius + width*width) / 12.0}"/>
+            </inertial>
+        </link>
+
+        <joint name="${name}_joint" type="continuous">
+            <parent link="base_link"/>
+            <child link="${name}_link"/>
+            <axis xyz="0 1 0"/>
+            <origin xyz="0 ${y} ${z}" rpy="0 0 0"/>
+        </joint>
+    </xacro:macro>
+
+    <link name="base_link">
+        <visual>
+            <geometry>
+                <box size="${base_length}
+                            ${base_width}
+                            ${base_height}"/> 
+            </geometry>
+        </visual>
+
+        <collision>
+            <geometry>
+                <box size="${base_length} ${base_width} ${base_height}"/>
+            </geometry>
+        </collision>
+
+        <inertial>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <mass value="${base_mass}"/>
+            <inertia ixx="${base_mass * (base_width*base_width + base_height*base_height) / 12.0}" 
+                    ixy="0" 
+                    ixz="0" 
+                    iyy="${base_mass * (base_length*base_length + base_height*base_height) / 12.0}" 
+                    iyz="0" 
+                    izz="${base_mass * (base_width*base_width + base_length*base_length) / 12.0}"/>
+        </inertial>
+    </link>
+
+    <link name="lidar_link">
+        <visual>
+            <geometry>
+                <cylinder radius="${lidar_radius}" length="${lidar_width}"/>
+            </geometry>
+        </visual>
+
+        <collision>
+            <geometry>
+                <cylinder radius="${lidar_radius}" length="${lidar_width}"/>
+            </geometry>
+        </collision>
+
+        <inertial>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <mass value="${lidar_mass}"/>
+            <inertia ixx="${lidar_mass * (3 * lidar_radius*lidar_radius + lidar_width*lidar_width) / 12.0}" 
+                    ixy="0" 
+                    ixz="0" 
+                    iyy="${lidar_mass * (3 * lidar_radius*lidar_radius + lidar_width*lidar_width) / 12.0}" 
+                    iyz="0" 
+                    izz="${lidar_mass * lidar_radius*lidar_radius / 2.0}"/>
+        </inertial>
+    </link>
+
+    <joint name="lidar_joint" type="fixed">
+        <parent link="base_link"/>
+        <child link="lidar_link"/>
+        <origin xyz="0 0 ${base_height/2 + lidar_width/2}" rpy="0 0 0"/>
+    </joint>
+
+    <xacro:wheel name="leftwheel"
+                y="${base_width/2 + leftwheel_width/2}"
+                z="${-base_height/2}"
+                radius="${leftwheel_radius}"
+                width="${leftwheel_width}"
+                mass="${wheel_mass}"/>
+    <xacro:wheel name="rightwheel" 
+                y="${-(base_width/2 + rightwheel_width/2)}"
+                z="${-base_height/2}"
+                radius="${rightwheel_radius}"
+                width="${rightwheel_width}"
+                mass="${wheel_mass}"/>
+
+</robot>
+    
